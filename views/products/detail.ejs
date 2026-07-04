@@ -32,7 +32,7 @@
         <div class="muted" style="font-size:0.82rem;">Penjual</div>
       </div>
       <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.id !== product.seller.id) { %>
-        <a href="/chat/<%= product.seller.id %>?productId=<%= product.id %>" class="btn btn-outline btn-sm" style="margin-left:auto;">💬 Chat Penjual</a>
+        <a href="/chat/<%= product.seller.id %>?productId=<%= product.id %>" class="btn btn-outline btn-sm" style="margin-left:auto;">Chat Penjual</a>
       <% } %>
     </div>
 
@@ -41,7 +41,7 @@
         <form action="/cart/add" method="POST" style="flex:1;display:flex;gap:8px;">
           <input type="hidden" name="productId" value="<%= product.id %>">
           <input type="number" name="quantity" value="1" min="1" max="<%= product.stock %>" style="width:80px;">
-          <button type="submit" class="btn btn-primary" <%= product.stock === 0 ? 'disabled' : '' %>>🛒 Tambah ke Keranjang</button>
+          <button type="submit" class="btn btn-primary" <%= product.stock === 0 ? 'disabled' : '' %>>Tambah ke Keranjang</button>
         </form>
         <form action="/wishlist/toggle" method="POST">
           <input type="hidden" name="productId" value="<%= product.id %>">
