@@ -9,17 +9,17 @@ const Product = sequelize.define('Product', {
   price: { type: DataTypes.DECIMAL(12, 2), allowNull: false, validate: { min: 0 } },
   stock: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 0, validate: { min: 0 } },
   // Disimpan sebagai JSON string array path gambar, contoh: ["/uploads/products/a.jpg"]
-  // images: {
-  //   type: DataTypes.TEXT,
-  //   defaultValue: '[]',
-  //   get() {
-  //     const raw = this.getDataValue('images');
-  //     try { return JSON.parse(raw || '[]'); } catch (e) { return []; }
-  //   },
-  //   set(val) {
-  //     this.setDataValue('images', JSON.stringify(val || []));
-  //   }
-  // },
+  images: {
+    type: DataTypes.TEXT,
+    defaultValue: '[]',
+    get() {
+      const raw = this.getDataValue('images');
+      try { return JSON.parse(raw || '[]'); } catch (e) { return []; }
+    },
+    set(val) {
+      this.setDataValue('images', JSON.stringify(val || []));
+    }
+  },
   categoryId: { type: DataTypes.INTEGER, allowNull: false },
   sellerId: { type: DataTypes.INTEGER, allowNull: false },
   ratingAvg: { type: DataTypes.DECIMAL(2, 1), defaultValue: 0 },
