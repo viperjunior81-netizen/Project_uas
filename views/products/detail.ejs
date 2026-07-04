@@ -45,7 +45,7 @@
         </form>
         <form action="/wishlist/toggle" method="POST">
           <input type="hidden" name="productId" value="<%= product.id %>">
-          <button type="submit" class="btn btn-outline">♥ Wishlist</button>
+          <button type="submit" class="btn btn-outline">Wishlist</button>
         </form>
       </div>
       <% if (product.stock === 0) { %><p class="form-error">Stok habis.</p><% } %>
@@ -65,7 +65,6 @@
       <div class="card card-pad">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
           <% if (r.buyer && r.buyer.avatar) { %>
-            <img src="<%= r.buyer.avatar %>" class="avatar" alt="">
           <% } %>
           <strong><%= r.buyer ? r.buyer.name : 'Pembeli' %></strong>
           <span class="star"><%= '★'.repeat(r.rating) %><span style="opacity:.25;"><%= '★'.repeat(5 - r.rating) %></span></span>
@@ -74,7 +73,7 @@
 
         <% if (r.sellerReply) { %>
           <div class="card card-pad" style="background:#f4f7f5;margin-top:10px;">
-            <strong>💬 Balasan Penjual:</strong>
+            <strong>Balasan Penjual:</strong>
             <p class="muted" style="margin:4px 0 0;"><%= r.sellerReply %></p>
           </div>
         <% } else if (typeof currentUser !== 'undefined' && currentUser && currentUser.id === product.seller.id) { %>
