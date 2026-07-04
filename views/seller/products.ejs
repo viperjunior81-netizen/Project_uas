@@ -1,0 +1,31 @@
+<div class="section-title">
+  <h1 style="margin:0;">Produk Saya</h1>
+  <a href="/seller/products/new" class="btn btn-primary">+ Tambah Produk</a>
+</div>
+
+<% if (products.length === 0) { %>
+  <div class="empty-state">
+    <p>Kamu belum memiliki produk.</p>
+  </div>
+<% } else { %>
+  <table class="data-table">
+    <thead><tr><th>Nama</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Status</th><th>Aksi</th></tr></thead>
+    <tbody>
+      <% products.forEach(p => { %>
+        <tr>
+          <td><%= p.name %></td>
+          <td><%= p.category ? p.category.name : '-' %></td>
+          <td>Rp <%= Number(p.price).toLocaleString('id-ID') %></td>
+          <td><%= p.stock %></td>
+          <td><span class="badge <%= p.isActive ? 'badge-completed' : 'badge-cancelled' %>"><%= p.isActive ? 'Aktif' : 'Nonaktif' %></span></td>
+          <td class="actions-row">
+            <a href="/seller/products/<%= p.id %>/edit" class="btn btn-outline btn-sm">Edit</a>
+            <form action="/seller/products/<%= p.id %>/delete" method="POST" onsubmit="return confirm('Hapus produk ini?');">
+              <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>

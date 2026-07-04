@@ -1,0 +1,23 @@
+<h1>Kelola Pengguna</h1>
+
+<table class="data-table" style="margin-top:16px;">
+  <thead><tr><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Bergabung</th><th></th></tr></thead>
+  <tbody>
+    <% users.forEach(u => { %>
+      <tr>
+        <td><%= u.name %></td>
+        <td><%= u.email %></td>
+        <td><%= u.role %></td>
+        <td><span class="badge <%= u.isActive ? 'badge-completed' : 'badge-cancelled' %>"><%= u.isActive ? 'Aktif' : 'Nonaktif' %></span></td>
+        <td><%= new Date(u.createdAt).toLocaleDateString('id-ID') %></td>
+        <td>
+          <% if (u.role !== 'admin') { %>
+            <form action="/admin/users/<%= u.id %>/toggle" method="POST">
+              <button type="submit" class="btn btn-outline btn-sm"><%= u.isActive ? 'Nonaktifkan' : 'Aktifkan' %></button>
+            </form>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

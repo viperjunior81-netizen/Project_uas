@@ -1,0 +1,21 @@
+<h1>Kelola Semua Produk</h1>
+
+<table class="data-table" style="margin-top:16px;">
+  <thead><tr><th>Produk</th><th>Kategori</th><th>Penjual</th><th>Harga</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    <% products.forEach(p => { %>
+      <tr>
+        <td><%= p.name %></td>
+        <td><%= p.category ? p.category.name : '-' %></td>
+        <td><%= p.seller ? p.seller.name : '-' %></td>
+        <td>Rp <%= Number(p.price).toLocaleString('id-ID') %></td>
+        <td><span class="badge <%= p.isActive ? 'badge-completed' : 'badge-cancelled' %>"><%= p.isActive ? 'Tampil' : 'Disembunyikan' %></span></td>
+        <td>
+          <form action="/admin/products/<%= p.id %>/toggle" method="POST">
+            <button type="submit" class="btn btn-outline btn-sm"><%= p.isActive ? 'Sembunyikan' : 'Tampilkan' %></button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>

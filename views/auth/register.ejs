@@ -1,0 +1,51 @@
+<div class="auth-shell">
+  <div class="card">
+    <div class="card-pad">
+      <h1 style="margin-top:0;">Buat Akun Baru</h1>
+      <p class="muted" style="margin-top:-8px;">Sudah punya akun? <a href="/auth/login" style="color:var(--green-700);font-weight:600;">Masuk di sini</a></p>
+
+      <% if (typeof errors !== 'undefined' && errors.length) { %>
+        <div class="flash flash-error"><%= errors[0].msg %></div>
+      <% } %>
+
+      <form action="/auth/register" method="POST">
+        <div class="form-group">
+          <label for="name">Nama Lengkap</label>
+          <input type="text" id="name" name="name" value="<%= old.name || '' %>" required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" value="<%= old.email || '' %>" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required minlength="6">
+          <div class="form-hint">Minimal 6 karakter</div>
+        </div>
+
+        <div class="form-group">
+          <label>Daftar sebagai</label>
+          <div class="role-pick">
+            <label><input type="radio" name="role" value="buyer" checked> Pembeli</label>
+            <label><input type="radio" name="role" value="seller"> Penjual</label>
+          </div>
+        </div>
+
+        <div class="form-group" id="storeNameGroup" style="display:none;">
+          <label for="storeName">Nama Toko</label>
+          <input type="text" id="storeName" name="storeName">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Daftar</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  const radios = document.querySelectorAll('input[name=role]');
+  const storeGroup = document.getElementById('storeNameGroup');
+  radios.forEach(r => r.addEventListener('change', () => {
+    storeGroup.style.display = document.querySelector('input[name=role]:checked').value === 'seller' ? 'block' : 'none';
+  }));
+</script>

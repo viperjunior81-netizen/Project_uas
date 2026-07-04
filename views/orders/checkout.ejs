@@ -1,0 +1,35 @@
+<h1>Checkout</h1>
+
+<div style="display:grid; grid-template-columns: 1.4fr 1fr; gap:28px;" class="checkout-grid">
+  <div class="card card-pad">
+    <h3 style="margin-top:0;">Alamat Pengiriman</h3>
+    <form action="/checkout" method="POST" id="checkoutForm">
+      <div class="form-group">
+        <label for="shippingAddress">Alamat Lengkap</label>
+        <textarea name="shippingAddress" id="shippingAddress" required><%= buyer.address || '' %></textarea>
+      </div>
+      <div class="form-group">
+        <label for="notes">Catatan (opsional)</label>
+        <textarea name="notes" id="notes" placeholder="Contoh: titip di security"></textarea>
+      </div>
+      <button type="submit" class="btn btn-accent btn-block">Buat Pesanan</button>
+    </form>
+  </div>
+
+  <div class="card card-pad">
+    <h3 style="margin-top:0;">Ringkasan Pesanan</h3>
+    <% items.forEach(item => { %>
+      <div style="display:flex;justify-content:space-between;font-size:0.88rem;padding:6px 0;border-bottom:1px solid var(--line);">
+        <span><%= item.product.name %> × <%= item.quantity %></span>
+        <span>Rp <%= (Number(item.product.price) * item.quantity).toLocaleString('id-ID') %></span>
+      </div>
+    <% }) %>
+    <div style="display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem;margin-top:14px;">
+      <span>Total</span><span>Rp <%= total.toLocaleString('id-ID') %></span>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 760px) { .checkout-grid { grid-template-columns: 1fr !important; } }
+</style>

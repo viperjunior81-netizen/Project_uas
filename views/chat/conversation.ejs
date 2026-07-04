@@ -1,0 +1,44 @@
+<h1>Chat dengan <%= partner.name %></h1>
+
+<% if (product) { %>
+  <div class="card card-pad" style="margin-bottom:14px;display:flex;align-items:center;gap:12px;">
+    <i class="fa-solid fa-box-open"></i>
+    <div>
+      <div class="muted" style="font-size:0.78rem;">Mengenai produk</div>
+      <a href="/products/<%= product.id %>" style="font-weight:600;"><%= product.name %></a>
+    </div>
+  </div>
+<% } %>
+
+<div class="chat-layout">
+  <div class="chat-sidebar">
+    <a href="/chat" class="active">&larr; Kembali ke Pesan</a>
+  </div>
+  <div class="chat-window">
+    <div class="messages" id="messages">
+      <% messages.forEach(m => { %>
+        <div class="chat-bubble <%= m.senderId === currentUser.id ? 'me' : 'them' %>"><%= m.text %></div>
+      <% }) %>
+    </div>
+    <form action="/chat/<%= partner.id %>/messages" method="POST">
+      <input type="text" name="text" placeholder="Tulis pesan..." required autocomplete="off">
+      <button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+  </div>
+</div>
+
+<script>
+  const messagesEl = document.getElementById('messages');
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+
+  if (typeof socket !== 'undefined') {
+    socket.on('new_message', (msg) => {
+      if (msg.conversationId !== '<%= conversationId %>') return;
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble ' + (msg.senderId === <%= currentUser.id %> ? 'me' : 'them');
+      bubble.innerText = msg.text;
+      messagesEl.appendChild(bubble);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    });
+  }
+</script>

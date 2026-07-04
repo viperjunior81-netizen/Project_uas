@@ -1,0 +1,23 @@
+<h1>Pesan</h1>
+
+<div class="chat-layout" style="margin-top:16px;">
+  <div class="chat-sidebar">
+    <% if (partners.length === 0) { %>
+      <p class="muted" style="padding:16px;">Belum ada percakapan.</p>
+    <% } else { %>
+      <% partners.forEach(p => { %>
+        <a href="/chat/<%= p.id %>">
+          <!-- Menggunakan UI-Avatars sebagai fallback jika gambar avatar kosong/pecah -->
+          <img src="<%= p.avatar %>" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(p.name) %>&background=random';" class="avatar" alt="">
+          <div>
+            <div style="font-weight:600;"><%= p.name %></div>
+            <div class="muted" style="font-size:0.78rem;text-transform:capitalize;"><%= p.role %></div>
+          </div>
+        </a>
+      <% }) %>
+    <% } %>
+  </div>
+  <div class="chat-window" style="align-items:center;justify-content:center;">
+    <p class="muted">Pilih percakapan untuk mulai chatting.</p>
+  </div>
+</div>

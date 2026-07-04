@@ -1,0 +1,34 @@
+<h1>Dashboard Admin</h1>
+
+<div class="grid stats-grid" style="margin-top:20px;">
+  <div class="card stat-card"><div class="label">Total Pengguna</div><div class="value"><%= totalUsers %></div></div>
+  <div class="card stat-card"><div class="label">Pembeli</div><div class="value"><%= totalBuyers %></div></div>
+  <div class="card stat-card"><div class="label">Penjual</div><div class="value"><%= totalSellers %></div></div>
+  <div class="card stat-card"><div class="label">Total Produk</div><div class="value"><%= totalProducts %></div></div>
+  <div class="card stat-card"><div class="label">Total Pesanan</div><div class="value"><%= totalOrders %></div></div>
+  <div class="card stat-card"><div class="label">Total Pendapatan</div><div class="value">Rp <%= Number(totalRevenue).toLocaleString('id-ID') %></div></div>
+</div>
+
+<div class="section-title">
+  <h2 style="margin:0;">Pesanan Terbaru</h2>
+  <a href="/admin/orders" class="btn btn-outline btn-sm">Lihat Semua</a>
+</div>
+
+<% if (recentOrders.length === 0) { %>
+  <p class="muted">Belum ada pesanan.</p>
+<% } else { %>
+  <table class="data-table">
+    <thead><tr><th>Order</th><th>Pembeli</th><th>Total</th><th>Status</th><th>Tanggal</th></tr></thead>
+    <tbody>
+      <% recentOrders.forEach(o => { %>
+        <tr>
+          <td><a href="/orders/<%= o.id %>">#<%= o.id %></a></td>
+          <td><%= o.buyer.name %></td>
+          <td>Rp <%= Number(o.totalAmount).toLocaleString('id-ID') %></td>
+          <td><span class="badge badge-<%= o.status %>"><%= o.status %></span></td>
+          <td><%= new Date(o.createdAt).toLocaleDateString('id-ID') %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>

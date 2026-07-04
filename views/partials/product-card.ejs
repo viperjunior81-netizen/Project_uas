@@ -1,0 +1,21 @@
+<a href="/products/<%= p.id %>" class="product-card">
+  <div class="thumb">
+    <% if (p.images && p.images.length) { %>
+      <img src="<%= p.images[0] %>" alt="<%= p.name %>">
+    <% } else { %>
+      <i class="fa-solid fa-box-open fa-2x" style="opacity:.3;"></i>
+    <% } %>
+  </div>
+  <div class="body">
+    <span class="cat"><%= p.category ? p.category.name : 'Umum' %></span>
+    <h3 class="name"><%= p.name %></h3>
+    <div class="price-tag">Rp <%= Number(p.price).toLocaleString('id-ID') %></div>
+    <div class="rating">
+      <% if (p.ratingCount > 0) { %>
+        <span class="star">★</span> <%= p.ratingAvg %> (<%= p.ratingCount %>)
+      <% } else { %>
+        Belum ada ulasan
+      <% } %>
+    </div>
+  </div>
+</a>

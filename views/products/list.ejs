@@ -1,0 +1,62 @@
+<div class="hero">
+  <div>
+    <h1>Belanja dari penjual lokal, langsung dari satu tempat.</h1>
+    <p>Temukan produk pilihan, chat langsung dengan penjual, dan lacak pesananmu secara real-time.</p>
+  </div>
+</div>
+
+<form class="filters-bar" action="/products" method="GET">
+  <div class="form-group">
+    <label for="category">Kategori</label>
+    <select name="category" id="category">
+      <option value="">Semua Kategori</option>
+      <% categories.forEach(c => { %>
+        <option value="<%= c.id %>" <%= String(query.category) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+      <% }) %>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="minPrice">Harga Min</label>
+    <input type="number" name="minPrice" id="minPrice" value="<%= query.minPrice || '' %>" placeholder="0">
+  </div>
+  <div class="form-group">
+    <label for="maxPrice">Harga Maks</label>
+    <input type="number" name="maxPrice" id="maxPrice" value="<%= query.maxPrice || '' %>" placeholder="10000000">
+  </div>
+  <div class="form-group">
+    <label for="sort">Urutkan</label>
+    <select name="sort" id="sort">
+      <option value="">Terbaru</option>
+      <option value="price_asc" <%= query.sort === 'price_asc' ? 'selected' : '' %>>Harga Terendah</option>
+      <option value="price_desc" <%= query.sort === 'price_desc' ? 'selected' : '' %>>Harga Tertinggi</option>
+      <option value="rating" <%= query.sort === 'rating' ? 'selected' : '' %>>Rating Tertinggi</option>
+    </select>
+  </div>
+  <% if (query.q) { %><input type="hidden" name="q" value="<%= query.q %>"><% } %>
+  <button type="submit" class="btn btn-primary">Terapkan</button>
+</form>
+
+<div class="section-title">
+  <h2 style="margin:0;"><%= query.q ? `Hasil untuk "${query.q}"` : 'Semua Produk' %></h2>
+</div>
+
+<% if (products.length === 0) { %>
+  <div class="empty-state">
+    <div class="big">🔍</div>
+    <p>Tidak ada produk yang cocok dengan pencarianmu.</p>
+  </div>
+<% } else { %>
+  <div class="grid grid-products">
+    <% products.forEach(p => { %>
+      <%- include('../partials/product-card', { p }) %>
+    <% }) %>
+  </div>
+
+  <% if (totalPages > 1) { %>
+    <div class="pagination">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <a href="?page=<%= i %>&q=<%= query.q || '' %>&category=<%= query.category || '' %>&sort=<%= query.sort || '' %>" class="<%= i === currentPage ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+    </div>
+  <% } %>
+<% } %>

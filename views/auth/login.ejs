@@ -1,0 +1,24 @@
+<div class="auth-shell">
+  <div class="card">
+    <div class="card-pad">
+      <h1 style="margin-top:0;">Masuk ke Pasar</h1>
+      <p class="muted" style="margin-top:-8px;">Belum punya akun? <a href="/auth/register" style="color:var(--green-700);font-weight:600;">Daftar di sini</a></p>
+
+      <% if (typeof errors !== 'undefined' && errors.length) { %>
+        <div class="flash flash-error"><%= errors[0].msg %></div>
+      <% } %>
+
+      <form action="/auth/login" method="POST">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autofocus>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+      </form>
+    </div>
+  </div>
+</div>

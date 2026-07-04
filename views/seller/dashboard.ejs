@@ -1,0 +1,40 @@
+  <h1 style="margin:0;">Dashboard Penjual</h1>
+  <a href="/seller/orders" class="btn btn-primary btn-sm">Pesanan Masuk</a>
+</div>
+
+<div class="grid stats-grid" style="margin-top:20px;">
+  <div class="card stat-card">
+    <div class="label">Total Produk</div>
+    <div class="value"><%= totalProducts %></div>
+  </div>
+  <div class="card stat-card">
+    <div class="label">Total Stok</div>
+    <div class="value"><%= totalStock %></div>
+  </div>
+  <div class="card stat-card">
+    <div class="label">Pendapatan</div>
+    <div class="value">Rp <%= Number(revenue).toLocaleString('id-ID') %></div>
+  </div>
+  <div class="card stat-card">
+    <div class="label">Unit Terjual</div>
+    <div class="value"><%= unitsSold %></div>
+  </div>
+</div>
+
+<div class="section-title">
+  <h2 style="margin:0;">Stok Menipis</h2>
+  <a href="/seller/products" class="btn btn-outline btn-sm">Kelola Produk</a>
+</div>
+
+<% if (lowStockProducts.length === 0) { %>
+  <p class="muted">Tidak ada produk dengan stok menipis.</p>
+<% } else { %>
+  <table class="data-table">
+    <thead><tr><th>Produk</th><th>Stok</th></tr></thead>
+    <tbody>
+      <% lowStockProducts.forEach(p => { %>
+        <tr><td><%= p.name %></td><td><%= p.stock %></td></tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>

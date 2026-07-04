@@ -1,0 +1,42 @@
+<h1>Pesanan Masuk</h1>
+
+<% if (items.length === 0) { %>
+  <div class="empty-state">
+    <p>Belum ada pesanan masuk.</p>
+  </div>
+<% } else { %>
+  <table class="data-table">
+    <thead><tr><th>Order</th><th>Produk</th><th>Qty</th><th>Subtotal</th><th>Status</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+    <tbody>
+      <% items.forEach(item => { %>
+        <tr>
+          <td>#<%= item.order.id %></td>
+          <td><%= item.name %></td>
+          <td><%= item.quantity %></td>
+          <td>Rp <%= (Number(item.price) * item.quantity).toLocaleString('id-ID') %></td>
+          <td><span class="badge badge-<%= item.order.status %>"><%= item.order.status %></span></td>
+          <td><%= new Date(item.createdAt).toLocaleDateString('id-ID') %></td>
+          <td>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+              <% if (item.order.status !== 'completed' && item.order.status !== 'cancelled') { %>
+                <form action="/orders/<%= item.order.id %>/status" method="POST" style="display:flex;gap:6px;">
+                  <select name="status" style="max-width:140px;">
+                    <% ['pending','paid','processing','shipped','completed','cancelled'].forEach(s => { %>
+                      <option value="<%= s %>" <%= item.order.status === s ? 'selected' : '' %>><%= s %></option>
+                    <% }) %>
+                  </select>
+                  <button type="submit" class="btn btn-outline btn-sm">Update</button>
+                </form>
+                <form action="/orders/<%= item.order.id %>/status" method="POST">
+                  <input type="hidden" name="status" value="completed">
+                  <button type="submit" class="btn btn-sm">Selesaikan</button>
+                </form>
+              <% } %>
+              <a href="/orders/<%= item.order.id %>" class="btn btn-outline btn-sm">Detail</a>
+            </div>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>

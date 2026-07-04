@@ -1,0 +1,94 @@
+<h1>Pesanan #<%= order.id %></h1>
+
+<div class="card card-pad" style="margin-bottom:20px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+    <div>
+      <div class="badge badge-<%= order.status %>"><%= order.status %></div>
+      <div class="muted" style="font-size:0.85rem;margin-top:6px;"><%= new Date(order.createdAt).toLocaleString('id-ID') %></div>
+    </div>
+    <% if (typeof currentUser !== 'undefined' && currentUser && (currentUser.role === 'admin' || currentUser.role === 'seller')) { %>
+      <form action="/orders/<%= order.id %>/status" method="POST" style="display:flex;gap:8px;">
+        <select name="status">
+          <% ['pending','paid','processing','shipped','completed','cancelled'].forEach(s => { %>
+            <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+          <% }) %>
+        </select>
+        <button type="submit" class="btn btn-outline btn-sm">Update Status</button>
+      </form>
+    <% } %>
+  </div>
+</div>
+
+<div class="card card-pad" style="margin-bottom:20px;">
+  <h3 style="margin-top:0;">Alamat Pengiriman</h3>
+  <p><%= order.shippingAddress %></p>
+  <% if (order.notes) { %><p class="muted">Catatan: <%= order.notes %></p><% } %>
+  <p><strong>Pembeli:</strong> <%= order.buyer.name %> (<%= order.buyer.email %>)</p>
+</div>
+
+<div class="card card-pad">
+  <h3 style="margin-top:0;">Item Pesanan</h3>
+  <% order.items.forEach(item => { %>
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);">
+      <span><%= item.name %> × <%= item.quantity %></span>
+      <span>Rp <%= (Number(item.price) * item.quantity).toLocaleString('id-ID') %></span>
+    </div>
+  <% }) %>
+  <div style="display:flex;justify-content:space-between;font-weight:800;font-size:1.1rem;margin-top:14px;">
+    <span>Total</span><span>Rp <%= Number(order.totalAmount).toLocaleString('id-ID') %></span>
+  </div>
+</div>
+
+<% if (order.status === 'completed') { %>
+  <div class="card card-pad" style="margin-top:20px;">
+    <h3 style="margin-top:0;">Ulasan Produk</h3>
+    <% order.items.forEach(item => { %>
+      <% const review = reviewsByProduct[item.productId]; %>
+      <div style="border-bottom:1px solid var(--line);padding:12px 0;">
+        <strong><%= item.name %></strong>
+
+        <% if (review) { %>
+          <div style="margin-top:8px;">
+            <span class="star"><%= '★'.repeat(review.rating) %><span style="opacity:.25;"><%= '★'.repeat(5 - review.rating) %></span></span>
+            <p class="muted" style="margin:6px 0 0;"><%= review.comment %></p>
+          </div>
+
+          <% if (review.sellerReply) { %>
+            <div class="card card-pad" style="background:#f4f7f5;margin-top:10px;">
+              <strong>Balasan Penjual:</strong>
+              <p class="muted" style="margin:4px 0 0;"><%= review.sellerReply %></p>
+            </div>
+          <% } else if (typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'seller' && item.sellerId === currentUser.id) { %>
+            <form action="/reviews/<%= review.id %>/reply" method="POST" style="margin-top:10px;display:flex;gap:8px;">
+              <input type="text" name="comment" placeholder="Balas ulasan ini..." style="flex:1;" required>
+              <button type="submit" class="btn btn-outline btn-sm">Kirim Balasan</button>
+            </form>
+          <% } %>
+
+        <% } else if (typeof currentUser !== 'undefined' && currentUser && currentUser.id === order.buyerId) { %>
+          <form action="/reviews" method="POST" style="margin-top:8px;">
+            <input type="hidden" name="productId" value="<%= item.productId %>">
+            <input type="hidden" name="orderId" value="<%= order.id %>">
+            <div class="form-group" style="margin-top:8px;">
+              <label>Rating (1-5)</label>
+              <select name="rating">
+                <option value="5">5 - Sangat Baik</option>
+                <option value="4">4 - Baik</option>
+                <option value="3">3 - Cukup</option>
+                <option value="2">2 - Kurang</option>
+                <option value="1">1 - Buruk</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Komentar</label>
+              <textarea name="comment" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn-outline btn-sm">Kirim Ulasan</button>
+          </form>
+        <% } else { %>
+          <p class="muted" style="margin-top:8px;">Belum ada ulasan untuk produk ini.</p>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+<% } %>

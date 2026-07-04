@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' · Rawr Marketplace' : 'Rawr Marketplace' %></title>
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="navbar container">
+      <a href="/" class="brand">Rawr<span>.</span></a>
+
+      <form class="navbar-search" action="/products" method="GET">
+        <input type="text" name="q" placeholder="Cari produk impianmu di sini..." value="<%= typeof query !== 'undefined' && query.q ? query.q : '' %>">
+        <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </form>
+
+      <nav class="navbar-actions">
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <% if (currentUser.role === 'buyer') { %>
+            <a href="/cart" class="nav-link">Keranjang</a>
+            <a href="/wishlist" class="nav-link">Wishlist</a>
+            <a href="/orders" class="nav-link">Pesanan</a>
+          <% } %>
+          <% if (currentUser.role === 'seller') { %>
+            <a href="/seller/dashboard" class="nav-link">Dashboard Toko</a>
+            <a href="/seller/orders" class="nav-link">Pesanan Masuk</a>
+          <% } %>
+          <% if (currentUser.role === 'admin') { %>
+            <a href="/admin/dashboard" class="nav-link">Dashboard Admin</a>
+          <% } %>
+          <a href="/chat" class="nav-link">Pesan</a>
+
+          <details class="navbar-dropdown">
+            <summary><img src="<%= currentUser.avatar %>" onerror="this.src='https://ui-avatars.com/api/?name=<%= encodeURIComponent(currentUser.name) %>&background=random';" class="avatar" style="width:32px;height:32px;vertical-align:middle;border-radius:50%;"> <%= currentUser.name %></summary>
+            <div class="dropdown-menu">
+              <form action="/auth/logout" method="POST" style="margin:0;">
+                <button type="submit" style="width:100%;">Keluar</button>
+              </form>
+            </div>
+          </details>
+        <% } else { %>
+          <a href="/auth/login" class="nav-link">Masuk</a>
+          <a href="/auth/register" class="btn btn-primary btn-sm">Daftar</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="padding-bottom:40px;">
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+      <div class="flash flash-success" style="margin-top:20px;"><%= success[0] %></div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+      <div class="flash flash-error" style="margin-top:20px;"><%= error[0] %></div>
+    <% } %>
+
+    <%- body %>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2026 Rawr Marketplace. All rights reserved.
+  </footer>
+
+  <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      socket.emit('join', <%= currentUser.id %>);
+    </script>
+  <% } %>
+</body>
+</html>
